@@ -1,0 +1,28 @@
+name: Ruby
+
+on:  
+  push:
+    branches: [master]
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v4
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true
+
+    - name: Run tests
+      env:
+        RAILS_ENV: test
+      run: |
+        bundle exec rake db:create db:schema:load
+        bundle exec rake
+        TEST_BROWSER=headless_chrome bundle exec rake test:system

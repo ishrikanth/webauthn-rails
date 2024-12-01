@@ -1,0 +1,38 @@
+service: webauthn-rails-demo
+
+image: webauthn-rails-demo
+
+servers:
+  web:
+    hosts:
+      - 3.233.189.168
+    options:
+      memory: 200MiB
+
+proxy:
+  host: webauthn.cedarcode.com
+  ssl: true
+  app_port: 3000
+
+registry:
+  server: 864100757851.dkr.ecr.us-east-1.amazonaws.com
+  username: AWS
+  password: <%= %x(aws ecr get-login-password) %>
+
+env:
+  clear:
+    RACK_ENV: production
+    RAILS_ENV: production
+    RAILS_LOG_TO_STDOUT: enabled
+    RAILS_SERVE_STATIC_FILES: enabled
+    LANG: en_US.UTF-8
+  secret:
+    - RAILS_MASTER_KEY
+
+ssh:
+  user: ubuntu
+
+builder:
+  arch: amd64
+  cache:
+    type: gha
